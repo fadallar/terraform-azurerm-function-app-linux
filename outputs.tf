@@ -1,5 +1,5 @@
 output "primary_key" {
-  value       = var.use_private_net ? data.azurerm_function_app_host_keys.this_vnet[0].primary_key : data.azurerm_function_app_host_keys.this[0].primary_key
+  value       = var.enable_private_access ? data.azurerm_function_app_host_keys.this_vnet[0].primary_key : data.azurerm_function_app_host_keys.this[0].primary_key
   description = "Function app primary key"
 }
 
