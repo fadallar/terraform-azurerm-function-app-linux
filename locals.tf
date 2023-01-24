@@ -8,7 +8,7 @@ locals {
     AZURE_LOG_LEVEL                     = "info"
     AzureWebJobsDisableHomepage         = "true"
     ### To-Do review below naming structure 
-    AzureFunctionsWebHost__hostid       = substr("fn-${var.project}-${var.env}-${var.location}-${var.name}", -32, -1)
+    ##  AzureFunctionsWebHost__hostid       = substr("fn-${var.project}-${var.env}-${var.location}-${var.name}", -32, -1)
   }
   application_stack_struct = {
     dotnet_version              = null

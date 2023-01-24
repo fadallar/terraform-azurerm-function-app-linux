@@ -53,7 +53,6 @@ variable "application_stack" {
   }
 }
 
-
 variable "app_settings" {
   type        = map(string)
   default     = {}
@@ -82,4 +81,9 @@ variable "appinsights_log_workspace_id" {
   type        = string
   description = "Resource ID of Log Analytics Workspace"
   default     = null
+}
+
+variable "storage_account_replication" {
+  type = string
+  default = "LRS"
 }
