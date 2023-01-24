@@ -1,7 +1,7 @@
 resource "azurerm_linux_function_app" "this" {
   name                          = local.name
   location                      = var.location
-  resource_group_name           = var.resource_group
+  resource_group_name           = var.resource_group_name
   storage_account_name          = var.log_storage_name
   service_plan_id               = var.service_plan_id
   storage_uses_managed_identity = true

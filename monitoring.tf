@@ -1,12 +1,12 @@
 // Please check issue https://github.com/hashicorp/terraform-provider-azurerm/issues/17172
 
 data "azurerm_monitor_diagnostic_categories" "diagcategories" {
-  resource_id = azurerm_servicebus_namespace.service_bus_namespace.id
+  resource_id = azurerm_linux_function_app.this.id
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostics" {
   name               = "default-Diagnostics-Logs"
-  target_resource_id = azurerm_servicebus_namespace.service_bus_namespace.id
+  target_resource_id = azurerm_linux_function_app.this.id
   log_analytics_workspace_id = var.diag_log_analytics_workspace_id
 
   dynamic "metric" {

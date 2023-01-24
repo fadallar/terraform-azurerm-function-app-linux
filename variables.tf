@@ -83,6 +83,11 @@ variable "appinsights_log_workspace_id" {
   default     = null
 }
 
+variable "application_insights_connection_string" {
+  type = string
+  default = null
+}
+
 variable "storage_account_replication" {
   type = string
   default = "LRS"

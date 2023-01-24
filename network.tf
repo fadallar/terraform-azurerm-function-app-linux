@@ -30,7 +30,7 @@ resource "azurerm_private_endpoint" "functionpep" {
 //Private Endpoints for Azure Function Storage subresources
 //Storage Account Blob Private Endpoint
 resource "azurerm_private_endpoint" "storageblob" {
-  count               = var.enable_private_endpoint && var.enable_function_storage == true ? 1 : 0
+  count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
   name                = format("pe-blob-%s", local.storage_account_name)
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -50,7 +50,7 @@ resource "azurerm_private_endpoint" "storageblob" {
 }
 // Storage Account Queue Private Endpoint
 resource "azurerm_private_endpoint" "storagequeue" {
-  count               = var.enable_private_endpoint && var.enable_function_storage == true ? 1 : 0
+  count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
   name                = format("pe-queue-%s", local.storage_account_name)
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -70,7 +70,7 @@ resource "azurerm_private_endpoint" "storagequeue" {
 }
 // Storage Account Table Private Endpoint
 resource "azurerm_private_endpoint" "storagetable" {
-  count               = var.enable_private_endpoint && var.enable_function_storage == true ? 1 : 0
+  count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
   name                = format("pe-table-%s", local.storage_account_name)
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -90,7 +90,7 @@ resource "azurerm_private_endpoint" "storagetable" {
 }
 // Storage Account Queue Private Endpoint
 resource "azurerm_private_endpoint" "storagefile" {
-  count               = var.enable_private_endpoint && var.enable_function_storage == true ? 1 : 0
+  count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
   name                = format("pe-file-%s", local.storage_account_name)
   location            = var.location
   resource_group_name = var.resource_group_name
