@@ -31,7 +31,7 @@ resource "azurerm_private_endpoint" "functionpep" {
 //Storage Account Blob Private Endpoint
 resource "azurerm_private_endpoint" "storageblob" {
   count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
-  name                = format("pe-blob-%s", local.storage_account_name)
+  name                = format("pe-blob-%s", var.log_storage_name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id_storage_account_private_endpoint
@@ -51,7 +51,7 @@ resource "azurerm_private_endpoint" "storageblob" {
 // Storage Account Queue Private Endpoint
 resource "azurerm_private_endpoint" "storagequeue" {
   count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
-  name                = format("pe-queue-%s", local.storage_account_name)
+  name                = format("pe-queue-%s", var.log_storage_name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id_storage_account_private_endpoint
@@ -71,7 +71,7 @@ resource "azurerm_private_endpoint" "storagequeue" {
 // Storage Account Table Private Endpoint
 resource "azurerm_private_endpoint" "storagetable" {
   count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
-  name                = format("pe-table-%s", local.storage_account_name)
+  name                = format("pe-table-%s", var.log_storage_name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id_storage_account_private_endpoint
@@ -91,7 +91,7 @@ resource "azurerm_private_endpoint" "storagetable" {
 // Storage Account Queue Private Endpoint
 resource "azurerm_private_endpoint" "storagefile" {
   count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
-  name                = format("pe-file-%s", local.storage_account_name)
+  name                = format("pe-file-%s", var.log_storage_name)
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = var.subnet_id_storage_account_private_endpoint
