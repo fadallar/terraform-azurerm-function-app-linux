@@ -88,6 +88,11 @@ variable "application_insights_connection_string" {
   default = null
 }
 
+variable "application_insights_instrumentation_key" {
+  type = string
+  default = null
+}
+
 variable "storage_account_replication" {
   type = string
   default = "LRS"
