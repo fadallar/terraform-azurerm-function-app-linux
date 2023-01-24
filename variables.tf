@@ -28,6 +28,11 @@ variable "service_plan_id" {
   type        = string
   description = "App Service plan ID"
 }
+variable "enable_function_storage" {
+  type = bool
+  default = true
+  description = "Configure a Storage account for the app"
+}
 
 variable "log_storage_name" {
   type        = string

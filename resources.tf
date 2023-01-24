@@ -63,6 +63,7 @@ resource "azurerm_storage_account" "storage_account" {
   location = var.location
   account_tier = "Standard"
   account_replication_type = var.storage_account_replication
+}
 
 
 data "azurerm_function_app_host_keys" "this" {
