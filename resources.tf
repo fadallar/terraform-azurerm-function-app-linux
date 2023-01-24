@@ -77,7 +77,7 @@ data "azurerm_function_app_host_keys" "this_vnet" {
   count               = var.enable_private_access ? 1 : 0
   depends_on          = [azurerm_linux_function_app.this, azurerm_app_service_virtual_network_swift_connection.this[0]]
   name                = azurerm_linux_function_app.this.name
-  resource_group_name = var.resource_group
+  resource_group_name = var.resource_group_name
 }
 //Not sure we should keep the app insights configuration in this module
 //
