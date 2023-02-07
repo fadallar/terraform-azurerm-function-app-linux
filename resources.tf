@@ -52,7 +52,7 @@ resource "azurerm_linux_function_app" "this" {
 }
 ## To-Do Review this role assignment
 resource "azurerm_role_assignment" "storage" {
-  scope                = azurerm_storage_account.storage.id
+  scope                = azurerm_storage_account.storage_account.id
   role_definition_name = "Storage Blob Data Owner"
   principal_id         = azurerm_linux_function_app.this.identity[0].principal_id
 }
