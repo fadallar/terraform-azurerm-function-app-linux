@@ -22,4 +22,3 @@ locals {
   }
   application_stack = merge(local.application_stack_struct, var.application_stack)
 }
-
