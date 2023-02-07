@@ -62,7 +62,6 @@ resource "azurerm_role_assignment" "storage" {
 
 ## To-Do Review the Storage Account Settings
 resource "azurerm_storage_account" "storage_account" {
-  count = var.enable_function_storage ? 1 : 0
   name = local.storage_name
   resource_group_name = var.resource_group_name
   location = var.location
