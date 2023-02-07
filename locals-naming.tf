@@ -11,4 +11,5 @@ locals {
   name_components_list   = compact([local.service_slug, local.landing_zone_slug, local.application_id, local.workload_info,local.environment, local.generated_random_value])
   standard_name          = join(local.separator, local.name_components_list)
   name                   = coalesce(lower(var.custom_name), lower(local.standard_name))
+  storage_name = join("",compact(["st",local.service_slug,local.application_id,local.generated_random_value]))
 }

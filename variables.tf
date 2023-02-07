@@ -65,6 +65,12 @@ variable "azure_rbac" {
   default     = []
 }
 
+variable "key_vault_identity_id" {
+  type = string
+  description = "Indentity for the Key Vault Role used to store and retrieve the storage access keys"
+  default = ""
+}
+
 variable "identity_ids" {
   type        = list(string)
   description = "List of user assigned identity IDs"

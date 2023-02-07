@@ -88,7 +88,7 @@ resource "azurerm_private_endpoint" "storagetable" {
     subresource_names              = ["table"]
   }
 }
-// Storage Account Queue Private Endpoint
+// Storage Account Queue File Endpoint
 resource "azurerm_private_endpoint" "storagefile" {
   count               = var.enable_private_access && var.enable_function_storage == true ? 1 : 0
   name                = format("pe-file-%s", var.log_storage_name)

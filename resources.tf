@@ -2,7 +2,9 @@ resource "azurerm_linux_function_app" "this" {
   name                          = local.name
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  storage_account_name          = var.log_storage_name
+  storage_account_name          = local.storage_name
+  #storage_account_name       = azurerm_storage_account.storage.name
+  #storage_account_access_key = azurerm_storage_account.storage.primary_access_key
   service_plan_id               = var.service_plan_id
   storage_uses_managed_identity = true
   https_only                    = true
@@ -11,9 +13,9 @@ resource "azurerm_linux_function_app" "this" {
   functions_extension_version   = "~4"   ### Maybe add this as a variable
   tags                          = merge(var.default_tags,var.extra_tags)
   app_settings                  = merge(local.app_settings, var.app_settings)
+  key_vault_reference_identity_id = var.key_vault_identity_id
   identity {
-    ## TO-DO Investigate the choice of system, userassaigned
-    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
+    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned,UserAssigned"
     identity_ids = var.identity_ids
   }
   site_config {
@@ -50,15 +52,18 @@ resource "azurerm_linux_function_app" "this" {
 }
 ## To-Do Review this role assignment
 resource "azurerm_role_assignment" "storage" {
-  for_each             = { for permision in var.azure_rbac : "${permision.scope}-${permision.role}" => permision }
-  scope                = each.value.scope
-  role_definition_name = each.value.role
+  scope                = azurerm_storage_account.storage.id
+  role_definition_name = "Storage Blob Data Owner"
   principal_id         = azurerm_linux_function_app.this.identity[0].principal_id
 }
 
+### To-DO Create KeyVault Secret with Azure File Connection String
+### And INject it in app-settings
+
 ## To-Do Review the Storage Account Settings
 resource "azurerm_storage_account" "storage_account" {
-  name = var.log_storage_name
+  count = var.enable_function_storage ? 1 : 0
+  name = local.storage_name
   resource_group_name = var.resource_group_name
   location = var.location
   account_tier = "Standard"

@@ -4,6 +4,8 @@ data "azurerm_monitor_diagnostic_categories" "diagcategories" {
   resource_id = azurerm_linux_function_app.this.id
 }
 
+## TO - DO Add Diagnostic settings for the created Storage account
+
 resource "azurerm_monitor_diagnostic_setting" "diagnostics" {
   name               = "default-Diagnostics-Logs"
   target_resource_id = azurerm_linux_function_app.this.id
