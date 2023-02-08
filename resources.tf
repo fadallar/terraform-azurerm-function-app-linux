@@ -15,7 +15,7 @@ resource "azurerm_linux_function_app" "this" {
   app_settings                  = merge(local.app_settings, var.app_settings)
   key_vault_reference_identity_id = var.key_vault_identity_id
   identity {
-    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned,UserAssigned"
+    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
     identity_ids = var.identity_ids
   }
   site_config {
