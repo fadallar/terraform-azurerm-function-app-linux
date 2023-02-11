@@ -93,3 +93,9 @@ variable "storage_account_replication" {
   type = string
   default = "LRS"
 }
+
+variable "storage_uses_managed_identity" {
+  description = "Use user managed identities for function storage account "
+  default = true
+  type = bool
+}
