@@ -2,8 +2,8 @@ resource "azurerm_linux_function_app" "this" {
   name                          = local.name
   location                      = var.location
   resource_group_name           = var.resource_group_name
-  storage_account_name       = azurerm_storage_account.storage_account.name
-  storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
+  #storage_account_name       = azurerm_storage_account.storage_account.name
+  #storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
   service_plan_id               = var.service_plan_id
   storage_uses_managed_identity = var.storage_uses_managed_identity
   https_only                    = true
