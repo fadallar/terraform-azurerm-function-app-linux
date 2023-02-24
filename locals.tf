@@ -4,10 +4,10 @@ locals {
     WEBSITE_ENABLE_SYNC_UPDATE_SITE     = "true"
     #JAVA_OPTS                           = "-Dlog4j2.formatMsgNoLookups=true"
     #LOG4J_FORMAT_MSG_NO_LOOKUPS         = "true"
-    WEBSITE_USE_PLACEHOLDER             = "0"
-    AZURE_LOG_LEVEL                     = "info"
-    AzureWebJobsDisableHomepage         = "true"
-    AzureWebJobsStorage__accountName    = local.storage_name
+    WEBSITE_USE_PLACEHOLDER          = "0"
+    AZURE_LOG_LEVEL                  = "info"
+    AzureWebJobsDisableHomepage      = "true"
+    AzureWebJobsStorage__accountName = local.storage_name
     ### To-Do review below naming structure 
     ##  AzureFunctionsWebHost__hostid       = substr("fn-${var.project}-${var.env}-${var.location}-${var.name}", -32, -1)
   }

@@ -1,34 +1,27 @@
-// Please check issue https://github.com/hashicorp/terraform-provider-azurerm/issues/17172
-
-data "azurerm_monitor_diagnostic_categories" "diagcategories" {
-  resource_id = azurerm_linux_function_app.this.id
-}
-
-## TO - DO Add Diagnostic settings for the created Storage account
-
 resource "azurerm_monitor_diagnostic_setting" "diagnostics" {
-  name               = "default-Diagnostics-Logs"
-  target_resource_id = azurerm_linux_function_app.this.id
-  log_analytics_workspace_id = var.diag_log_analytics_workspace_id
+  name                           = var.diag_default_setting_name
+  target_resource_id             = azurerm_linux_function_app.this
+  log_analytics_destination_type = var.log_analytics_destination_type
+  log_analytics_workspace_id     = var.diag_log_analytics_workspace_id
+  storage_account_id             = var.diag_storage_account_id
 
   dynamic "metric" {
-    for_each = data.azurerm_monitor_diagnostic_categories.diagcategories.metrics
+    for_each = var.diag_metric_categories
     content {
       category = metric.value
-      enabled  = true
       retention_policy {
-        days    = 30
+        days    = var.diag_retention_days
         enabled = true
       }
     }
   }
-  dynamic "log" {
-    for_each = data.azurerm_monitor_diagnostic_categories.diagcategories.log_category_types
+
+  dynamic "enabled_log" {
+    for_each = var.diag_log_categories
     content {
-      category = log.key
-      enabled  = true
+      category = enabled_log.value
       retention_policy {
-        days    = 30
+        days    = var.diag_retention_days
         enabled = true
       }
     }

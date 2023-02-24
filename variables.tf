@@ -56,9 +56,9 @@ variable "azure_rbac" {
 }
 
 variable "key_vault_identity_id" {
-  type = string
+  type        = string
   description = "Indentity for the Key Vault Role used to store and retrieve the storage access keys"
-  default = ""
+  default     = ""
 }
 
 variable "identity_ids" {
@@ -80,22 +80,22 @@ variable "appinsights_log_workspace_id" {
 }
 
 variable "application_insights_connection_string" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "application_insights_instrumentation_key" {
-  type = string
+  type    = string
   default = null
 }
 
 variable "storage_account_replication" {
-  type = string
+  type    = string
   default = "LRS"
 }
 
 variable "storage_uses_managed_identity" {
   description = "Use user managed identities for function storage account "
-  default = true
-  type = bool
+  default     = true
+  type        = bool
 }

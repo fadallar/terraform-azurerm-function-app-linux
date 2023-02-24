@@ -28,9 +28,9 @@ variable "ip_restriction" {
 }
 
 variable "enable_private_access" {
-  type = bool
+  type        = bool
   description = "Use private network injection"
-  default = true
+  default     = true
 }
 //Subnet References
 variable "subnet_id_delegated_app_service" {
@@ -40,36 +40,36 @@ variable "subnet_id_delegated_app_service" {
 }
 // Private endpoints
 variable "subnet_id_function_app_private_endpoint" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "subnet_id_storage_account_private_endpoint" {
-  type = string
+  type    = string
   default = ""
 }
 // Private DNS Zones
 variable "private_dns_zone_ids_function_app" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "private_dns_zone_ids_blob_storage" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "private_dns_zone_ids_queue_storage" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "private_dns_zone_ids_table_storage" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "private_dns_zone_ids_file_storage" {
-  type = string
+  type    = string
   default = ""
 }

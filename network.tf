@@ -18,7 +18,7 @@ resource "azurerm_private_endpoint" "functionpep" {
 
   private_dns_zone_group {
     name                 = "function-group"
-    private_dns_zone_ids = [var.private_dns_zone_ids_function_app]  ### Need to align with the current DNS Private Zone
+    private_dns_zone_ids = [var.private_dns_zone_ids_function_app] ### Need to align with the current DNS Private Zone
   }
   private_service_connection {
     name                           = "functionprivatelink"
