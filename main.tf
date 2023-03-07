@@ -61,6 +61,7 @@ resource "azurerm_linux_function_app" "this" {
 resource "azurerm_storage_share" "this" {
   name                 = "functionshare"
   storage_account_name = azurerm_storage_account.storage_account.name
+  quota                = 50
 }
 
 resource "azurerm_storage_account" "storage_account" {
