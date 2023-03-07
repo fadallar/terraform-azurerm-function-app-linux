@@ -1,6 +1,6 @@
 locals {
   app_settings = {
-    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING = azurerm_storage_account.storage_account.storage_primary_access_key
+    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING = azurerm_storage_account.storage_account.primary_access_key
 
   }
   application_stack_struct = {
