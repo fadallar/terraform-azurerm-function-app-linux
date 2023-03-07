@@ -74,10 +74,10 @@ resource "azurerm_storage_account" "storage_account" {
   public_network_access_enabled    = true
   cross_tenant_replication_enabled = false
   min_tls_version                  = "TLS1_2"
-  allow_nested_items_to_be_public  = false
-  shared_access_key_enabled        = true
-  enable_https_traffic_only        = true
-  access_tier                      = "Hot"
+  #allow_nested_items_to_be_public  = true
+  shared_access_key_enabled = true
+  enable_https_traffic_only = true
+  access_tier               = "Hot"
 }
 
 
