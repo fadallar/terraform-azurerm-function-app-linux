@@ -23,7 +23,6 @@ resource "azurerm_linux_function_app" "this" {
     ## 
     #application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
     always_on = true
-    vnetrouteallenabled = 1
     #ftps_state                             = "Disabled"
     #http2_enabled                          = true
     #websockets_enabled                     = false
@@ -71,7 +70,7 @@ resource "azurerm_storage_account" "storage_account" {
   location                         = var.location
   account_tier                     = "Standard"
   account_replication_type         = var.storage_account_replication
-  public_network_access_enabled    = false
+  public_network_access_enabled    = true
   cross_tenant_replication_enabled = false
   min_tls_version                  = "TLS1_2"
   allow_nested_items_to_be_public  = false
