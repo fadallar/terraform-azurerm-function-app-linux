@@ -4,6 +4,7 @@ locals {
     WEBSITE_VNET_ROUTE_ALL = 1
     WEBSITE_DNS_SERVER = "168.63.129.16"
     WEBSITE_CONTENTOVERVNET = 1
+    WEBSITE_CONTENTSHARE ="functionshare"
   }
   application_stack_struct = {
     dotnet_version              = null
