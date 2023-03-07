@@ -1,16 +1,16 @@
 resource "azurerm_linux_function_app" "this" {
-  name                 = local.name
-  location             = var.location
-  resource_group_name  = var.resource_group_name
-  storage_account_name = azurerm_storage_account.storage_account.name
-  #storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
-  service_plan_id               = var.service_plan_id
-  storage_uses_managed_identity = var.storage_uses_managed_identity
-  https_only                    = true
-  enabled                       = true
-  builtin_logging_enabled       = false
-  functions_extension_version   = "~4" ### Maybe add this as a variable
-  tags                          = merge(var.default_tags, var.extra_tags)
+  name                       = local.name
+  location                   = var.location
+  resource_group_name        = var.resource_group_name
+  storage_account_name       = azurerm_storage_account.storage_account.name
+  storage_account_access_key = azurerm_storage_account.storage_account.storage_primary_access_key
+  service_plan_id            = var.service_plan_id
+  #storage_uses_managed_identity = var.storage_uses_managed_identity
+  https_only                  = var.https_only
+  enabled                     = true
+  builtin_logging_enabled     = var.builtin_logging_enabled
+  functions_extension_version = var.functions_extension_version
+  tags                        = merge(var.default_tags, var.extra_tags)
   #app_settings                  = merge(local.app_settings, var.app_settings)
   key_vault_reference_identity_id = var.key_vault_identity_id
   identity {
@@ -50,22 +50,28 @@ resource "azurerm_linux_function_app" "this" {
   #}
 }
 ## To-Do Review this role assignment
-resource "azurerm_role_assignment" "storage" {
-  scope                = azurerm_storage_account.storage_account.id
-  role_definition_name = "Storage Blob Data Owner"
-  principal_id         = azurerm_linux_function_app.this.identity[0].principal_id
-}
-
+#resource "azurerm_role_assignment" "storage" {
+#  scope                = azurerm_storage_account.storage_account.id
+#  role_definition_name = "Storage Blob Data Owner"
+#  principal_id         = azurerm_linux_function_app.this.identity[0].principal_id
+#}
+#
 ### To-DO Create KeyVault Secret with Azure File Connection String
 ### And INject it in app-settings
 
-## To-Do Review the Storage Account Settings
 resource "azurerm_storage_account" "storage_account" {
-  name                     = local.storage_name
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = var.storage_account_replication
+  name                             = local.storage_name
+  resource_group_name              = var.resource_group_name
+  location                         = var.location
+  account_tier                     = "Standard"
+  account_replication_type         = var.storage_account_replication
+  public_network_access_enabled    = false
+  cross_tenant_replication_enabled = false
+  min_tls_version                  = "TLS1_2"
+  allow_nested_items_to_be_public  = true
+  shared_access_key_enabled        = true
+  enable_https_traffic_only        = true
+  access_tier                      = "Hot"
 }
 
 
@@ -82,14 +88,3 @@ data "azurerm_function_app_host_keys" "this_vnet" {
   name                = azurerm_linux_function_app.this.name
   resource_group_name = var.resource_group_name
 }
-//Not sure we should keep the app insights configuration in this module
-//
-#resource "azurerm_application_insights" "this" {
-#  count               = var.enable_appinsights ? 1 : 0
-#  name                = "fn-${var.project}-${var.env}-${var.location}-${var.name}"
-#  location            = var.location
-#  resource_group_name = var.resource_group
-#  application_type    = var.application_type
-#  workspace_id        = var.appinsights_log_workspace_id
-#  tags                = var.tags
-#}

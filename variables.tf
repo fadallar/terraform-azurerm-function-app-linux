@@ -92,6 +92,10 @@ variable "application_insights_instrumentation_key" {
 variable "storage_account_replication" {
   type    = string
   default = "LRS"
+  validation {
+    condition     = contains(["LRS", "ZRS"], var.storage_account_replication)
+    error_message = "Invalid variable: ${var.storage_account_replication}. Replication type not valid we only support LRS or ZRS"
+  }
 }
 
 variable "storage_uses_managed_identity" {
@@ -99,3 +103,19 @@ variable "storage_uses_managed_identity" {
   default     = true
   type        = bool
 }
+
+variable "functions_extension_version" {
+  description = "Function Runtime Version"
+  default     = "~4"
+}
+
+variable "https_only" {
+  description = "Can the Function App only be accessed via HTTPS?"
+  default     = true
+}
+
+variable "builtin_logging_enabled" {
+  description = "Should built in logging be enabled. Configures AzureWebJobsDashboard app setting based on the configured storage setting"
+  default     = true
+}
+

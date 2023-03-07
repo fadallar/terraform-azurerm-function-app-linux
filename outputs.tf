@@ -17,3 +17,13 @@ output "outbound_ip_address_list" {
   value       = azurerm_linux_function_app.this.outbound_ip_address_list
   description = "Function app outbound IP address list"
 }
+
+output "storage_primary_access_key" {
+  value       = azurerm_storage_account.storage_account.primary_access_key
+  description = "Storage Account primary access key"
+}
+
+output "storage_secondary_access_key" {
+  value       = azurerm_storage_account.storage_account.secondary_access_key
+  description = "Storage Account secondary access key"
+}
