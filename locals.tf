@@ -1,5 +1,7 @@
 locals {
   app_settings = {
+    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING = azurerm_storage_account.storage_account.storage_primary_access_key
+
   }
   application_stack_struct = {
     dotnet_version              = null
@@ -12,3 +14,12 @@ locals {
   }
   application_stack = merge(local.application_stack_struct, var.application_stack)
 }
+
+#APPLICATIONINSIGHTS_CONNECTION_STRING
+#AzureWebJobsDisableHomepage
+#AzureWebJobsStorage
+#FUNCTION_APP_EDIT_MODE
+#FUNCTIONS_EXTENSION_VERSION
+#FUNCTIONS_WORKER_RUNTIME e.g java
+#JAVA_OPTS  only for Premium and dedicated
+#WEBSITE_CONTENTAZUREFILECONNECTIONSTRING
