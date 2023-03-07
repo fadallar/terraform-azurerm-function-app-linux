@@ -1,5 +1,5 @@
 resource "azurerm_linux_function_app" "this" {
-  depends_on                 = [azurerm_storage_account.storage_account]
+  depends_on                 = [azurerm_storage_account.storage_account,azurerm_storage_share.this]
   name                       = local.name
   location                   = var.location
   resource_group_name        = var.resource_group_name
@@ -58,6 +58,9 @@ resource "azurerm_linux_function_app" "this" {
 #
 ### To-DO Create KeyVault Secret with Azure File Connection String
 ### And INject it in app-settings
+resource "azurerm_storage_share" "this" {
+  name                 = "functionshare"
+  storage_account_name = azurerm_storage_account.storage_account.name
 
 resource "azurerm_storage_account" "storage_account" {
   name                             = local.storage_name
