@@ -23,6 +23,7 @@ resource "azurerm_linux_function_app" "this" {
     ## 
     #application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
     always_on = true
+    vnetrouteallenabled = 1
     #ftps_state                             = "Disabled"
     #http2_enabled                          = true
     #websockets_enabled                     = false
