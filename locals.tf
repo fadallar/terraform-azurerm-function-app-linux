@@ -1,6 +1,9 @@
 locals {
   app_settings = {
     WEBSITE_CONTENTAZUREFILECONNECTIONSTRING = azurerm_storage_account.storage_account.primary_connection_string
+    WEBSITE_VNET_ROUTE_ALL = 1
+    WEBSITE_DNS_SERVER = 168.63.129.16
+    WEBSITE_CONTENTOVERVNET = 1
   }
   application_stack_struct = {
     dotnet_version              = null
