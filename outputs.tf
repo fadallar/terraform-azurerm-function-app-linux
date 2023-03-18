@@ -1,8 +1,8 @@
-output "primary_key" {
-  value       = var.enable_private_access ? data.azurerm_function_app_host_keys.this_vnet[0].primary_key : data.azurerm_function_app_host_keys.this[0].primary_key
-  description = "Function app primary key"
-  sensitive   = true
-}
+# "primary_key" {
+#e       = var.enable_private_access ? data.azurerm_function_app_host_keys.this_vnet[0].primary_key : data.azurerm_function_app_host_keys.this[0].primary_key
+#ription = "Function app primary key"
+#itive   = true
+#
 
 output "id" {
   value       = azurerm_linux_function_app.this.id
