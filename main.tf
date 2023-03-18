@@ -12,7 +12,7 @@ resource "azurerm_linux_function_app" "this" {
   builtin_logging_enabled         = var.builtin_logging_enabled
   functions_extension_version     = var.functions_extension_version
   tags                            = merge(var.default_tags, var.extra_tags)
-  app_settings                    = merge(local.app_settings, var.app_settings)
+  #app_settings                    = merge(local.app_settings, var.app_settings)
   key_vault_reference_identity_id = var.key_vault_identity_id
   identity {
     type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
@@ -81,16 +81,16 @@ resource "azurerm_storage_account" "storage_account" {
 }
 
 
-data "azurerm_function_app_host_keys" "this" {
-  count               = var.enable_private_access ? 0 : 1
-  depends_on          = [azurerm_linux_function_app.this]
-  name                = azurerm_linux_function_app.this.name
-  resource_group_name = var.resource_group_name
-}
-
-data "azurerm_function_app_host_keys" "this_vnet" {
-  count               = var.enable_private_access ? 1 : 0
-  depends_on          = [azurerm_linux_function_app.this, azurerm_app_service_virtual_network_swift_connection.this[0]]
-  name                = azurerm_linux_function_app.this.name
-  resource_group_name = var.resource_group_name
-}
+#data "azurerm_function_app_host_keys" "this" {
+#  count               = var.enable_private_access ? 0 : 1
+#  depends_on          = [azurerm_linux_function_app.this]
+#  name                = azurerm_linux_function_app.this.name
+#  resource_group_name = var.resource_group_name
+#}
+#
+#data "azurerm_function_app_host_keys" "this_vnet" {
+#  count               = var.enable_private_access ? 1 : 0
+#  depends_on          = [azurerm_linux_function_app.this, azurerm_app_service_virtual_network_swift_connection.this[0]]
+#  name                = azurerm_linux_function_app.this.name
+#  resource_group_name = var.resource_group_name
+#}
