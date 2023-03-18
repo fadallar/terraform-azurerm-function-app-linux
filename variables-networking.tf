@@ -27,6 +27,12 @@ variable "ip_restriction" {
   ]
 }
 
+variable "vnet_route_all_enabled" {
+  type =bool
+  description = "Enable VNET route all. Only relevant if VNET integration is used"
+  default = false
+}
+
 variable "enable_private_access" {
   type        = bool
   description = "Use private network injection"
