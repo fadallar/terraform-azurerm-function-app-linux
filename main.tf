@@ -41,7 +41,7 @@ resource "azurerm_linux_function_app" "this" {
   #    powershell_core_version     = local.application_stack.powershell_core_version
   #    use_custom_runtime          = local.application_stack.use_custom_runtime
   #  }
-  }
+  }#
   #lifecycle {
   #  # To-DO evaluate the reasoning behing these ignore changes
   #  ignore_changes = [
