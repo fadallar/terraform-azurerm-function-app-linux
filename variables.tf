@@ -58,7 +58,7 @@ variable "azure_rbac" {
 variable "key_vault_identity_id" {
   type        = string
   description = "Indentity for the Key Vault Role used to store and retrieve the storage access keys"
-  default     = ""
+  default     = null
 }
 
 variable "identity_ids" {
