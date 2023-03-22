@@ -17,7 +17,8 @@ resource "azurerm_linux_function_app" "this" {
   site_config {
     vnet_route_all_enabled                 = var.vnet_route_all_enabled
     application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
-
+    pre_warmed_instance_count              = 1
+    runtime_scale_monitoring_enabled       = true
     application_stack {
       dotnet_version              = local.application_stack.dotnet_version
       use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
