@@ -15,7 +15,9 @@ resource "azurerm_linux_function_app" "this" {
   tags = merge(var.default_tags, var.extra_tags)
 
   site_config {
-    vnet_route_all_enabled = var.vnet_route_all_enabled
+    vnet_route_all_enabled                 = var.vnet_route_all_enabled
+    application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
+
     application_stack {
       dotnet_version              = local.application_stack.dotnet_version
       use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
@@ -26,6 +28,16 @@ resource "azurerm_linux_function_app" "this" {
       use_custom_runtime          = local.application_stack.use_custom_runtime
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      tags["hidden-link: /app-insights-conn-string"],
+      tags["hidden-link: /app-insights-instrumentation-key"],
+      tags["hidden-link: /app-insights-resource-id"],
+      virtual_network_subnet_id ### Refer to https://github.com/hashicorp/terraform-provider-azurerm/issues/17930
+    ]
+  }
+
 }
 #storage_uses_managed_identity   = var.storage_uses_managed_identity
 #builtin_logging_enabled         = var.builtin_logging_enabled
@@ -35,7 +47,6 @@ resource "azurerm_linux_function_app" "this" {
 #site_config {
 #  ## To-DO Evaluate below site config vs best practices
 #  ## 
-#  #application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
 #  always_on = true
 #  vnet_route_all_enabled = var.vnet_route_all_enabled
 #  #ftps_state                             = "Disabled"
