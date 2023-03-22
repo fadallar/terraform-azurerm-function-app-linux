@@ -7,21 +7,29 @@ resource "azurerm_linux_function_app" "this" {
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
   service_plan_id            = var.service_plan_id
   site_config       {
-
+    application_stack {
+    dotnet_version              = local.application_stack.dotnet_version
+    use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
+    java_version                = local.application_stack.java_version
+    node_version                = local.application_stack.node_version
+    python_version              = local.application_stack.python_version
+    powershell_core_version     = local.application_stack.powershell_core_version
+    use_custom_runtime          = local.application_stack.use_custom_runtime
+    }
   }
 }
 #storage_uses_managed_identity   = var.storage_uses_managed_identity
-#https_only                      = var.https_only
-#enabled                         = true
+https_only                      = var.https_only
+enabled                         = true
 #builtin_logging_enabled         = var.builtin_logging_enabled
 #functions_extension_version     = var.functions_extension_version
-#tags                            = merge(var.default_tags, var.extra_tags)
+tags                            = merge(var.default_tags, var.extra_tags)
 #app_settings                    = merge(local.app_settings, var.app_settings)
 #key_vault_reference_identity_id = var.key_vault_identity_id
-#identity {
-#  type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
-#  identity_ids = var.identity_ids
-#}
+identity {
+  type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
+  identity_ids = var.identity_ids
+}
 #site_config {
 #  ## To-DO Evaluate below site config vs best practices
 #  ## 
