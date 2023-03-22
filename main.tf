@@ -6,6 +6,14 @@ resource "azurerm_linux_function_app" "this" {
   storage_account_name       = azurerm_storage_account.storage_account.name
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
   service_plan_id            = var.service_plan_id
+  https_only                      = var.https_only
+  enabled                         = true
+  identity {
+    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
+    identity_ids = var.identity_ids
+  }
+  tags                            = merge(var.default_tags, var.extra_tags)
+  
   site_config       {
     application_stack {
     dotnet_version              = local.application_stack.dotnet_version
@@ -19,17 +27,10 @@ resource "azurerm_linux_function_app" "this" {
   }
 }
 #storage_uses_managed_identity   = var.storage_uses_managed_identity
-https_only                      = var.https_only
-enabled                         = true
 #builtin_logging_enabled         = var.builtin_logging_enabled
 #functions_extension_version     = var.functions_extension_version
-tags                            = merge(var.default_tags, var.extra_tags)
 #app_settings                    = merge(local.app_settings, var.app_settings)
 #key_vault_reference_identity_id = var.key_vault_identity_id
-identity {
-  type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
-  identity_ids = var.identity_ids
-}
 #site_config {
 #  ## To-DO Evaluate below site config vs best practices
 #  ## 
