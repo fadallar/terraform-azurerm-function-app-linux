@@ -6,23 +6,24 @@ resource "azurerm_linux_function_app" "this" {
   storage_account_name       = azurerm_storage_account.storage_account.name
   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
   service_plan_id            = var.service_plan_id
-  https_only                      = var.https_only
-  enabled                         = true
+  https_only                 = var.https_only
+  enabled                    = true
   identity {
     type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
     identity_ids = var.identity_ids
   }
-  tags                            = merge(var.default_tags, var.extra_tags)
-  
-  site_config       {
+  tags = merge(var.default_tags, var.extra_tags)
+
+  site_config {
+    vnet_route_all_enabled = var.vnet_route_all_enabled
     application_stack {
-    dotnet_version              = local.application_stack.dotnet_version
-    use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
-    java_version                = local.application_stack.java_version
-    node_version                = local.application_stack.node_version
-    python_version              = local.application_stack.python_version
-    powershell_core_version     = local.application_stack.powershell_core_version
-    use_custom_runtime          = local.application_stack.use_custom_runtime
+      dotnet_version              = local.application_stack.dotnet_version
+      use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
+      java_version                = local.application_stack.java_version
+      node_version                = local.application_stack.node_version
+      python_version              = local.application_stack.python_version
+      powershell_core_version     = local.application_stack.powershell_core_version
+      use_custom_runtime          = local.application_stack.use_custom_runtime
     }
   }
 }
