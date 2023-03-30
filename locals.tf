@@ -13,7 +13,9 @@ locals {
   default_application_settings = merge(
     var.application_zip_package_path != null ? {
       # MD5 as query to force function restart on change
-      WEBSITE_RUN_FROM_PACKAGE = local.zip_package_url
+      #WEBSITE_RUN_FROM_PACKAGE = local.zip_package_url
+      WEBSITE_RUN_FROM_PACKAGE = null #### TO DO 
+
     } : {},
     substr(lookup(local.site_config, "linux_fx_version", ""), 0, 7) == "DOCKER|" ? {
       FUNCTIONS_WORKER_RUNTIME            = null

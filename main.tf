@@ -22,7 +22,7 @@ resource "azurerm_linux_function_app" "this" {
   key_vault_reference_identity_id = var.key_vault_reference_identity_id
 
   app_settings = merge(
-    local.default_app_settings,
+    local.default_application_settings,
     var.app_settings,
   )
 
