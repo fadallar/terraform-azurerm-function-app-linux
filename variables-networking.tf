@@ -1,31 +1,31 @@
-variable "ip_restriction" {
-  description = "Firewall settings for the function app"
-  type = list(object({
-    name                      = string
-    ip_address                = string
-    service_tag               = string
-    virtual_network_subnet_id = string
-    priority                  = string
-    action                    = string
-    headers = list(object({
-      x_azure_fdid      = list(string)
-      x_fd_health_probe = list(string)
-      x_forwarded_for   = list(string)
-      x_forwarded_host  = list(string)
-    }))
-  }))
-  default = [
-    {
-      name                      = "allow_azure"
-      ip_address                = null
-      service_tag               = "AzureCloud"
-      virtual_network_subnet_id = null
-      priority                  = "100"
-      action                    = "Allow"
-      headers                   = null
-    }
-  ]
-}
+#variable "ip_restriction" {
+#  description = "Firewall settings for the function app"
+#  type = list(object({
+#    name                      = string
+#    ip_address                = string
+#    service_tag               = string
+#    virtual_network_subnet_id = string
+#    priority                  = string
+#    action                    = string
+#    headers = list(object({
+#      x_azure_fdid      = list(string)
+#      x_fd_health_probe = list(string)
+#      x_forwarded_for   = list(string)
+#      x_forwarded_host  = list(string)
+#    }))
+#  }))
+#  default = [
+#    {
+#      name                      = "allow_azure"
+#      ip_address                = null
+#      service_tag               = "AzureCloud"
+#      virtual_network_subnet_id = null
+#      priority                  = "100"
+#      action                    = "Allow"
+#      headers                   = null
+#    }
+#  ]
+#}
 
 variable "vnet_route_all_enabled" {
   type        = bool

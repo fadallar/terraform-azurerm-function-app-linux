@@ -1,4 +1,4 @@
-// All Networking code included in the Function App ressource provider
+
 // Networking Variables are still in the variables-networking.tf  file
 //
 resource "azurerm_app_service_virtual_network_swift_connection" "this" {

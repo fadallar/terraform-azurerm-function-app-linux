@@ -1,94 +1,123 @@
 resource "azurerm_linux_function_app" "this" {
-  depends_on                 = [azurerm_storage_account.storage_account]
-  name                       = local.name
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
-  storage_account_name       = azurerm_storage_account.storage_account.name
-  storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
-  service_plan_id            = var.service_plan_id
+  depends_on          = [azurerm_storage_account.storage_account]
+  name                = local.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  enabled             = true
+
+  service_plan_id = var.service_plan_id
+
+  storage_account_name          = azurerm_storage_account.storage_account.name
+  storage_account_access_key    = !var.storage_uses_managed_identity ? azurerm_storage_account.storage_account.primary_access_key : null
+  storage_uses_managed_identity = var.storage_uses_managed_identity ? true : null
+
+  functions_extension_version = var.functions_extension_version
+
   https_only                 = var.https_only
-  enabled                    = true
+  client_certificate_enabled = var.client_certificate_enabled
+  client_certificate_mode    = var.client_certificate_mode
+
+
+  app_settings = merge(
+    local.default_app_settings,
+    var.app_settings,
+  )
+
+  dynamic "site_config" {
+    for_each = [local.site_config]
+    content {
+      always_on                         = lookup(site_config.value, "always_on", null)
+      api_definition_url                = lookup(site_config.value, "api_definition_url", null)
+      api_management_api_id             = lookup(site_config.value, "api_management_api_id", null)
+      app_command_line                  = lookup(site_config.value, "app_command_line", null)
+      app_scale_limit                   = lookup(site_config.value, "app_scale_limit", null)
+      default_documents                 = lookup(site_config.value, "default_documents", null)
+      ftps_state                        = lookup(site_config.value, "ftps_state", "Disabled")
+      health_check_path                 = lookup(site_config.value, "health_check_path", null)
+      health_check_eviction_time_in_min = lookup(site_config.value, "health_check_eviction_time_in_min", null)
+      http2_enabled                     = lookup(site_config.value, "http2_enabled", null)
+      load_balancing_mode               = lookup(site_config.value, "load_balancing_mode", null)
+      managed_pipeline_mode             = lookup(site_config.value, "managed_pipeline_mode", null)
+      minimum_tls_version               = lookup(site_config.value, "minimum_tls_version", lookup(site_config.value, "min_tls_version", "1.2"))
+      remote_debugging_enabled          = lookup(site_config.value, "remote_debugging_enabled", false)
+      remote_debugging_version          = lookup(site_config.value, "remote_debugging_version", null)
+      runtime_scale_monitoring_enabled  = lookup(site_config.value, "runtime_scale_monitoring_enabled", null)
+      websockets_enabled                = lookup(site_config.value, "websockets_enabled", false)
+
+      application_insights_connection_string = var.application_insights_connection_string
+      application_insights_key               = var.application_insights_instrumentation_key
+
+      pre_warmed_instance_count = lookup(site_config.value, "pre_warmed_instance_count", null)
+      elastic_instance_minimum  = lookup(site_config.value, "elastic_instance_minimum", null)
+      worker_count              = lookup(site_config.value, "worker_count", null)
+
+      vnet_route_all_enabled = lookup(site_config.value, "vnet_route_all_enabled", var.function_app_vnet_integration_subnet_id != null)
+
+      ip_restriction              = concat(local.subnets, local.cidrs, local.service_tags)
+      scm_type                    = lookup(site_config.value, "scm_type", null)
+      scm_use_main_ip_restriction = length(var.scm_authorized_ips) > 0 || var.scm_authorized_subnet_ids != null ? false : true
+      scm_ip_restriction          = concat(local.scm_subnets, local.scm_cidrs, local.scm_service_tags)
+
+      dynamic "application_stack" {
+        for_each = lookup(site_config.value, "application_stack", null) == null ? [] : ["application_stack"]
+        content {
+          dynamic "docker" {
+            for_each = lookup(local.site_config.application_stack, "docker", null) == null ? [] : ["docker"]
+            content {
+              registry_url      = local.site_config.application_stack.docker.registry_url
+              image_name        = local.site_config.application_stack.docker.image_name
+              image_tag         = local.site_config.application_stack.docker.image_tag
+              registry_username = lookup(local.site_config.application_stack.docker, "registry_username", null)
+              registry_password = lookup(local.site_config.application_stack.docker, "registry_password", null)
+            }
+          }
+
+          dotnet_version              = lookup(local.site_config.application_stack, "dotnet_version", null)
+          use_dotnet_isolated_runtime = lookup(local.site_config.application_stack, "use_dotnet_isolated_runtime", null)
+
+          java_version            = lookup(local.site_config.application_stack, "java_version", null)
+          node_version            = lookup(local.site_config.application_stack, "node_version", null)
+          python_version          = lookup(local.site_config.application_stack, "python_version", null)
+          powershell_core_version = lookup(local.site_config.application_stack, "powershell_core_version", null)
+
+          use_custom_runtime = lookup(local.site_config.application_stack, "use_custom_runtime", null)
+        }
+      }
+
+      dynamic "cors" {
+        for_each = lookup(site_config.value, "cors", null) != null ? ["cors"] : []
+        content {
+          allowed_origins     = lookup(site_config.value.cors, "allowed_origins", [])
+          support_credentials = lookup(site_config.value.cors, "support_credentials", false)
+        }
+      }
+    }
+  }
+
+  builtin_logging_enabled = var.builtin_logging_enabled
+
   identity {
-    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
-    identity_ids = var.identity_ids
+    type         = var.identity_type
+    identity_ids = var.identity_type == "UserAssigned" ? var.identity_ids : null
   }
   tags = merge(var.default_tags, var.extra_tags)
 
-  site_config {
-    vnet_route_all_enabled                 = var.vnet_route_all_enabled
-    application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
-    pre_warmed_instance_count              = 1
-    runtime_scale_monitoring_enabled       = true
-    application_stack {
-      dotnet_version              = local.application_stack.dotnet_version
-      use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
-      java_version                = local.application_stack.java_version
-      node_version                = local.application_stack.node_version
-      python_version              = local.application_stack.python_version
-      powershell_core_version     = local.application_stack.powershell_core_version
-      use_custom_runtime          = local.application_stack.use_custom_runtime
-    }
-  }
 
   lifecycle {
     ignore_changes = [
       tags["hidden-link: /app-insights-conn-string"],
       tags["hidden-link: /app-insights-instrumentation-key"],
       tags["hidden-link: /app-insights-resource-id"],
-      virtual_network_subnet_id ### Refer to https://github.com/hashicorp/terraform-provider-azurerm/issues/17930
+      virtual_network_subnet_id, ### Refer to https://github.com/hashicorp/terraform-provider-azurerm/issues/17930
+      app_settings.WEBSITE_RUN_FROM_ZIP,
+      app_settings.WEBSITE_RUN_FROM_PACKAGE,
+      app_settings.MACHINEKEY_DecryptionKey,
+      app_settings.WEBSITE_CONTENTAZUREFILECONNECTIONSTRING,
+      app_settings.WEBSITE_CONTENTSHARE
     ]
   }
 
 }
-#storage_uses_managed_identity   = var.storage_uses_managed_identity
-#builtin_logging_enabled         = var.builtin_logging_enabled
-#functions_extension_version     = var.functions_extension_version
-#app_settings                    = merge(local.app_settings, var.app_settings)
-#key_vault_reference_identity_id = var.key_vault_identity_id
-#site_config {
-#  ## To-DO Evaluate below site config vs best practices
-#  ## 
-#  always_on = true
-#  vnet_route_all_enabled = var.vnet_route_all_enabled
-#  #ftps_state                             = "Disabled"
-#  #http2_enabled                          = true
-#  #websockets_enabled                     = false
-#  #use_32_bit_worker                      = false
-#  #ip_restriction                         = var.ip_restriction
-#  #scm_ip_restriction                     = var.ip_restriction
-#  application_stack {
-#    dotnet_version              = local.application_stack.dotnet_version
-#    use_dotnet_isolated_runtime = local.application_stack.use_dotnet_isolated_runtime
-#    java_version                = local.application_stack.java_version
-#    node_version                = local.application_stack.node_version
-#    python_version              = local.application_stack.python_version
-#    powershell_core_version     = local.application_stack.powershell_core_version
-#    use_custom_runtime          = local.application_stack.use_custom_runtime
-#  }
-#
-#lifecycle {
-#  # To-DO evaluate the reasoning behing these ignore changes
-#  ignore_changes = [
-#    tags["hidden-link: /app-insights-conn-string"],
-#    tags["hidden-link: /app-insights-instrumentation-key"],
-#    tags["hidden-link: /app-insights-resource-id"],
-#    virtual_network_subnet_id
-#  ]
-#}
-## To-Do Review this role assignment
-#resource "azurerm_role_assignment" "storage" {
-#  scope                = azurerm_storage_account.storage_account.id
-#  role_definition_name = "Storage Blob Data Owner"
-#  principal_id         = azurerm_linux_function_app.this.identity[0].principal_id
-#}
-#
-### To-DO Create KeyVault Secret with Azure File Connection String
-### And INject it in app-settings
-#resource "azurerm_storage_share" "this" {
-#  name                 = "functionshare"
-#  storage_account_name = azurerm_storage_account.storage_account.name
-#  quota                = 50
-#}
 
 resource "azurerm_storage_account" "storage_account" {
   name                             = local.storage_name
@@ -96,26 +125,12 @@ resource "azurerm_storage_account" "storage_account" {
   location                         = var.location
   account_tier                     = "Standard"
   account_replication_type         = var.storage_account_replication
-  public_network_access_enabled    = true
+  public_network_access_enabled    = var.storage_public_access_enabled
   cross_tenant_replication_enabled = false
   min_tls_version                  = "TLS1_2"
-  #allow_nested_items_to_be_public  = true
-  shared_access_key_enabled = true
-  enable_https_traffic_only = true
-  access_tier               = "Hot"
+  allow_nested_items_to_be_public  = var.storage_allow_nested_item_to_be_public
+  shared_access_key_enabled        = true
+  enable_https_traffic_only        = true
+  access_tier                      = "Hot"
 }
 
-
-#data "azurerm_function_app_host_keys" "this" {
-#  count               = var.enable_private_access ? 0 : 1
-#  depends_on          = [azurerm_linux_function_app.this]
-#  name                = azurerm_linux_function_app.this.name
-#  resource_group_name = var.resource_group_name
-#}
-#
-#data "azurerm_function_app_host_keys" "this_vnet" {
-#  count               = var.enable_private_access ? 1 : 0
-#  depends_on          = [azurerm_linux_function_app.this, azurerm_app_service_virtual_network_swift_connection.this[0]]
-#  name                = azurerm_linux_function_app.this.name
-#  resource_group_name = var.resource_group_name
-#}
