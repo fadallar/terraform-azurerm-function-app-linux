@@ -191,7 +191,7 @@ variable "authorized_service_tags" {
 variable "storage_account_authorized_ips" {
   description = ""
   type        = list(string)
-  default     = null
+  default     = []
 }
 
 

@@ -3,7 +3,6 @@ locals {
   is_consumption = false # TODO check how to test it in our case
 
   default_site_config = {
-    always_on                              = !local.is_consumption
     application_insights_connection_string = var.enable_appinsights ? var.application_insights_connection_string : null
     application_insights_key               = var.enable_appinsights ? var.application_insights_instrumentation_key : null
   }
