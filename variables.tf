@@ -126,7 +126,7 @@ variable "client_certificate_mode" {
   default     = null
 }
 
-
+###  Site Config Related
 variable "site_config" {
   description = "Site config for Function App. See documentation https://www.terraform.io/docs/providers/azurerm/r/app_service.html#site_config. IP restriction attribute is not managed in this block."
   type        = any
@@ -138,7 +138,6 @@ variable "application_zip_package_path" {
   type        = string
   default     = null
 }
-
 
 variable "authorized_ips" {
   description = "IPs restriction for Function in CIDR format. See documentation https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/function_app#ip_restriction"
@@ -188,8 +187,12 @@ variable "authorized_service_tags" {
   default     = []
 }
 
-#var.function_app_vnet_integration_subnet_id
-#var.storage_account_authorized_ips
+
+variable "storage_account_authorized_ips" {
+  description = ""
+  type        = list(string)
+  default     = null
+}
 
 
 ### Storage Account Related
