@@ -17,6 +17,9 @@ resource "azurerm_linux_function_app" "this" {
   client_certificate_enabled = var.client_certificate_enabled
   client_certificate_mode    = var.client_certificate_mode
 
+  builtin_logging_enabled = var.builtin_logging_enabled
+
+  key_vault_reference_identity_id = var.key_vault_reference_identity_id
 
   app_settings = merge(
     local.default_app_settings,
@@ -51,7 +54,7 @@ resource "azurerm_linux_function_app" "this" {
       elastic_instance_minimum  = lookup(site_config.value, "elastic_instance_minimum", null)
       worker_count              = lookup(site_config.value, "worker_count", null)
 
-      vnet_route_all_enabled = lookup(site_config.value, "vnet_route_all_enabled", var.function_app_vnet_integration_subnet_id != null)
+      vnet_route_all_enabled = lookup(site_config.value, "vnet_route_all_enabled", var.subnet_id_delegated_app_service != null)
 
       ip_restriction              = concat(local.subnets, local.cidrs, local.service_tags)
       scm_type                    = lookup(site_config.value, "scm_type", null)
@@ -94,7 +97,6 @@ resource "azurerm_linux_function_app" "this" {
     }
   }
 
-  builtin_logging_enabled = var.builtin_logging_enabled
 
   identity {
     type         = var.identity_type
