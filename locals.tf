@@ -105,7 +105,7 @@ locals {
   #####  Building a List of allowed IP to be used by the storage account Firewall
   ## If no VNet integration, allow Function App outbound public IPs
 
-  function_outbound_ips = var.subnet_id_delegated_app_service == null ? distinct(concat(azurerm_linux_function_app.this.possible_outbound_ip_address_list, azurerm_linux_function_app.linux_function.outbound_ip_address_list)) : []
+  function_outbound_ips = var.subnet_id_delegated_app_service == null ? distinct(concat(azurerm_linux_function_app.this.possible_outbound_ip_address_list, azurerm_linux_function_app.this.outbound_ip_address_list)) : []
 
   ## https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_network_rules#ip_rules
   ## > Small address ranges using "/31" or "/32" prefix sizes are not supported. These ranges should be configured using individual IP address rules without prefix specified.
