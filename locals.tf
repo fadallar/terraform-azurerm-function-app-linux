@@ -21,6 +21,7 @@ locals {
     } : {},
   )
 
+  ######################    Building the different ip restrictions rules for the site_config
   default_ip_restrictions_headers = {
     x_azure_fdid      = null
     x_fd_health_probe = null
@@ -97,19 +98,21 @@ locals {
     action                    = "Allow"
     headers                   = local.scm_ip_restriction_headers
   }]
+  ##########################################################################################################
 
-  # # If no VNet integration, allow Function App outbound public IPs
+  #####  Building a List of allowed IP to be used by the storage account Firewall
+  ## If no VNet integration, allow Function App outbound public IPs
 
   function_outbound_ips = var.subnet_id_delegated_app_service == null ? distinct(concat(azurerm_linux_function_app.this.possible_outbound_ip_address_list, azurerm_linux_function_app.linux_function.outbound_ip_address_list)) : []
-  #
-  # # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_network_rules#ip_rules
-  # # > Small address ranges using "/31" or "/32" prefix sizes are not supported. These ranges should be configured using individual IP address rules without prefix specified.
+
+  ## https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account_network_rules#ip_rules
+  ## > Small address ranges using "/31" or "/32" prefix sizes are not supported. These ranges should be configured using individual IP address rules without prefix specified.
 
   storage_ips = distinct(flatten([for cidr in distinct(concat(local.function_outbound_ips, var.storage_account_authorized_ips)) :
     length(regexall("/3[12]$", cidr)) > 0 ? [cidrhost(cidr, 0), cidrhost(cidr, -1)] : [cidr]
   ]))
 
-  #### TO DO 
+  #### TO DO Handling ZIP package 
   #is_local_zip = length(regexall("^(http(s)?|ftp)://", var.application_zip_package_path != null ? var.application_zip_package_path : 0)) == 0
   #zip_package_url = (
   #  var.application_zip_package_path != null && local.is_local_zip ?
